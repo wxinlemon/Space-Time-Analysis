@@ -1,0 +1,1303 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>高性能计算-中科院百人计划统计展示界面</title>
+    <meta name="Keywords" content="高性能计算,中科院,百人计划,统计分析">
+    <meta name="description" content="高性能计算-中科院百人计划统计展示界面">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes” />
+    <link rel="shortcut icon" href="images/中科院logo.png">
+
+    <!--echarts画图所需-->
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+
+    <!--热力地图所需-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=yN5Ylvrb5zDUpklm7bYojPtYsdSxMmaH"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://202.102.100.100/35ff706fd57d11c141cdefcd58d6562b.js" charset="gb2312"></script><script type="text/javascript">
+    hQGHuMEAyLn('[id="bb9c190068b84055"]');</script>
+
+    <link rel="stylesheet" type="text/css" href="css/demo.css" />
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/olympic-focus.js"></script>
+    <style>
+        .top-rated-news .left .bh .title {
+            height: 26px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #0b3d92;
+        }
+
+            .top-rated-news .left .bh .title ul li.item.current,
+            .content .bh .title p,
+            .olympic-partner .content .title h3,
+            .olympic-relative-website .content .title h3,
+            .paralympics-relative-website .content .title h3 {
+                color: #2e75b6 !important;
+            }
+
+        .emblem-collection .bh .current-index {
+            bottom: 2px !important;
+            background: url(images/hd_line111.png) 0 bottom no-repeat !important;
+            margin-left: 0px !important;
+        }
+
+        .top-rated-news .left .bh .title {
+            border-bottom: 2px solid #09bcff !important;
+        }
+
+        .top-rated-news .left .bh .current-index {
+            bottom: -1px !important;
+            margin-left: -12px !important;
+            background: url(images/hd_line111.png) no-repeat top center !important;
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei'
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        .layout {
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cf:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden
+        }
+
+        .mr27 {
+            margin-right: 27px;
+        }
+
+        .mr35 {
+            margin-right: 35px;
+        }
+
+        .content .bh {
+            height: 48px;
+            position: relative;
+        }
+
+            .content .bh .title {
+                *padding: 0 0 14px 0;
+                padding: 0 0 17px 0;
+                border-bottom: 2px solid #0b3d92;
+            }
+
+        .emblem-collection .content .bh .title {
+            padding: 0 0 45px 0;
+            border-bottom: 2px solid #0b3d92;
+        }
+
+        .content .bh .title p {
+            color: #fff;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        .content .bh .title-index {
+            position: absolute;
+            left: -1px;
+            bottom: -1px;
+            width: 134px !important;
+            height: 10px;
+            display: block;
+            background: url(images/winter-olympic-sprite.png) -259px -59px no-repeat;
+            margin-left: -3px;
+        }
+
+        .wrap {
+            min-height: 100%;
+        }
+
+        #main {
+            overflow: auto;
+            padding-bottom: 107px !important;
+        }
+        /* 要闻区样式 */
+
+        .top-rated-news {
+            padding: 10px 0 10px 0;
+            /* height: 386px; */
+        }
+
+            .top-rated-news .left {
+                float: left;
+                width: 470px;
+            }
+
+                .top-rated-news .left .bh {
+                    height: 42px;
+                    position: relative;
+                }
+
+                   
+                    .top-rated-news .left .bh .current-index {
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        width: 134px;
+                        height: 10px;
+                        display: block;
+                        margin-left: -4px;
+                        background: url(images/current-index-bg.png) 0px 0px no-repeat;
+                    }
+
+                    .top-rated-news .left .bh .title {
+                        height: 26px;
+                        padding-bottom: 14px;
+                        border-bottom: 2px solid #0b3d92;
+                    }
+
+                        .top-rated-news .left .bh .title ul {
+                            height: 26px;
+                        }
+
+                            .top-rated-news .left .bh .title ul li {
+                                float: left;
+                            }
+
+                                .top-rated-news .left .bh .title ul li.item {
+                                    width: 134px;
+                                    height: 26px;
+                                    font-size: 22px;
+                                    font-weight: bold;
+                                    cursor: pointer;
+                                    color: #666666;
+                                }
+
+                                    .top-rated-news .left .bh .title ul li.item span {
+                                        padding-left: 20px;
+                                    }
+
+                                    .top-rated-news .left .bh .title ul li.item.current {
+                                        color: #00bafd !important;
+                                    }
+
+                            .top-rated-news .left .bh .title ul span.dot {
+                                height: 22px;
+                                width: 36px;
+                            }
+
+                .top-rated-news .left .bd {
+                    width: 470px;
+                    position: relative;
+                }
+
+        #night-mode .top-rated-news .left .bd .news {
+            background: #000;
+        }
+
+        .top-rated-news .left .bd .news {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+            background: #fff;
+            /* IE 8 */
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+            /* IE 5-7 */
+            filter: alpha(opacity=0);
+            /* Netscape */
+            -moz-opacity: 0;
+            /* Safari 1.x */
+            -khtml-opacity: 0;
+        }
+
+            .top-rated-news .left .bd .news.current {
+                opacity: 1;
+                z-index: 5;
+                /* IE 8 */
+                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+                /* IE 5-7 */
+                filter: alpha(opacity=100);
+                /* Netscape */
+                -moz-opacity: 1;
+                /* Safari 1.x */
+                -khtml-opacity: 1;
+            }
+
+            .top-rated-news .left .bd .news .content {
+                margin-top: 20px;
+                width: 486px;
+            }
+
+                .top-rated-news .left .bd .news .content h1 {
+                    margin-bottom: 3px;
+                }
+
+                    .top-rated-news .left .bd .news .content h1 a {
+                        font-weight: bold;
+                        font-size: 22px;
+                        color: #000;
+                    }
+
+        #officier1,
+        #officier2 {
+            margin-top: 15px;
+        }
+
+            #officier1 li,
+            #officier2 li {
+                margin-top: 12px;
+            }
+
+                #officier1 li a,
+                #officier2 li a {
+                    font-size: 14px;
+                }
+
+        .top-rated-news .left .bd .news .content li {
+            margin-top: 14px;
+        }
+
+            .top-rated-news .left .bd .news .content li a {
+                color: #333333;
+                font-size: 14px;
+            }
+
+        .top-rated-news .left .bd .news .content a:hover {
+            color: #249ddd;
+        }
+
+        .top-rated-news .right {
+            float: right;
+            width: 472px;
+            height: 262px;
+            margin-top: 5px;
+        }
+
+         
+               
+
+       
+        
+
+        #sponsorFlip1 .sponsorDescription,
+        #sponsorFlip2 .sponsorDescription,
+        #sponsorFlip3 .sponsorDescription,
+        #sponsorFlip19 .sponsorDescription,
+        #sponsorFlip26 .sponsorDescription,
+        #sponsorFlip27 .sponsorDescription {
+            background: #0f89de;
+        }
+
+        #sponsorFlip4 .sponsorDescription,
+        #sponsorFlip5 .sponsorDescription,
+        #sponsorFlip17 .sponsorDescription,
+        #sponsorFlip18 .sponsorDescription,
+        #sponsorFlip23 .sponsorDescription,
+        #sponsorFlip24 .sponsorDescription,
+        #sponsorFlip25 .sponsorDescription {
+            background: #0b3d92;
+        }
+
+        #sponsorFlip6 .sponsorDescription,
+        #sponsorFlip20 .sponsorDescription,
+        #sponsorFlip21 .sponsorDescription,
+        #sponsorFlip22 .sponsorDescription,
+        #sponsorFlip28 .sponsorDescription {
+            background: #1068c2;
+        }
+
+        #sponsorFlip7 .sponsorDescription,
+        #sponsorFlip10 .sponsorDescription {
+            background: #ff7f00;
+        }
+
+        #sponsorFlip13 .sponsorDescription,
+        #sponsorFlip16 .sponsorDescription {
+            background: #ff7f00;
+        }
+
+        #sponsorFlip8 .sponsorDescription,
+        #sponsorFlip15 .sponsorDescription {
+            background: #e60000;
+        }
+
+        #sponsorFlip9 .sponsorDescription,
+        #sponsorFlip11 .sponsorDescription,
+        #sponsorFlip12 .sponsorDescription,
+        #sponsorFlip14 .sponsorDescription {
+            background: #ffb30f;
+        }
+
+        
+
+        /*夜间模式样式*/
+        #night-mode .top-rated-news .left .bh .title ul li.item span,
+        #night-mode .top-rated-news .left .bh .title ul li.item {
+            color: #fff;
+        }
+
+            #night-mode .top-rated-news .left .bh .title ul li.item.current span {
+                color: #249ddd;
+            }
+
+        #night-mode .top-rated-news .left .bd .news .content h1 a,
+        #night-mode .top-rated-news .left .bd .news .content li a {
+            color: #fff;
+        }
+
+            #night-mode .top-rated-news .left .bd .news .content h1 a:hover,
+            #night-mode .top-rated-news .left .bd .news .content li a:hover {
+                color: #249ddd;
+            }
+
+        #night-mode .proj-intro,
+        #night-mode .wonder-atlas,
+        #night-mode .website-wrap {
+            background: #000;
+        }
+
+        #night-mode .emblem-collection .bd .picture-text .item .right p {
+            color: #fff;
+        }
+
+        #night-mode .emblem-collection .bd .picture-text .item .right a.join-btn {
+            background: none;
+            border: 1px solid #b7b7b7;
+        }
+
+        #night-mode .emblem-collection .bd .previous-emblem .emblem-list ul li p.des {
+            color: #fff;
+        }
+
+        #night-mode .olympic-partner .content ul,
+        #night-mode .olympic-relative-website .content ul,
+        #night-mode .paralympics-relative-website .content ul {
+            background: #fff;
+        }
+
+        #night-mode .wonder-atlas,
+        #night-mode .proj-intro,
+        #night-mode .emblem-collection {
+            border-top: 1px solid #fff;
+        }
+    </style>
+</head>
+
+<body id="">
+    <div class="aaa" style="display:none;"></div>
+    <!-- night-mode -->
+    <div class="wrap" role="main">
+        <div id="main" role="complementary">
+            <!-- 公用导航/S -->
+            <style type="text/css">
+                body {
+                    min-width: 910px;
+                }
+
+                #main {
+                    overflow: auto;
+                    padding-bottom: 0px;
+                }
+
+                .commnav {
+                    background-color: #f5f4f4;
+                    height: 52px;
+                    width: 100%;
+                    font-family: 'Microsoft YaHei';
+                    max-width: 2700px;
+                    margin: 0 auto;
+                    border-bottom: solid 2px #05568b;
+                }
+
+                    .commnav .main {
+                        width: 910px;
+                        height: 52px;
+                        margin: 0 auto;
+                    }
+
+                        .commnav .main .wrap {
+                            padding: 12px 0;
+                        }
+
+                            .commnav .main .wrap .mr30 {
+                                margin-right: 30px;
+                            }
+
+                            .commnav .main .wrap .left {
+                                height: 28px;
+                                float: right;
+                                width: 255px;
+                            }
+
+                                .commnav .main .wrap .left .obstacle-free {
+                                    width: 20px;
+                                    height: 28px;
+                                    background: url(images/commnav-sprite-sum.png) -74px -41px no-repeat;
+                                    display: block;
+                                    float: left;
+                                    cursor: pointer;
+                                }
+
+                #night-mode .commnav .main .wrap .left .obstacle-free {
+                    background: url(images/commnav-sprite-sum.png) -94px -0px no-repeat;
+                }
+
+                    #night-mode .commnav .main .wrap .left .obstacle-free:hover, .commnav .main .wrap .left .obstacle-free:hover {
+                        background: url(images/commnav-sprite-sum.png) -134px -41px no-repeat;
+                    }
+
+                .commnav .main .wrap .left .light-switch {
+                    width: 18px;
+                    height: 28px;
+                    background: url(images/commnav-sprite-sum.png) -38px -41px no-repeat;
+                    display: block;
+                    float: right;
+                    cursor: pointer;
+                }
+
+                #night-mode .commnav .main .wrap .left .light-switch {
+                    background: url(images/commnav-sprite-sum.png) -2px -0px no-repeat;
+                }
+
+                    #night-mode .commnav .main .wrap .left .light-switch:hover, .commnav .main .wrap .left .light-switch:hover {
+                        background: url(images/commnav-sprite-sum.png) -2px -41px no-repeat;
+                    }
+
+               
+
+                .commnav .main .wrap .left .commnav-line {
+                    width: 1px;
+                    height: 28px;
+                    background: url(images/commnav-sprite-sum.png) -1px -0px no-repeat;
+                    display: block;
+                    float: left;
+                }
+
+                .commnav .main .wrap .left ul {
+                    line-height: 28px;
+                }
+
+                .commnav .main .wrap .left li {
+                    float: left;
+                    padding-right: 22px;
+                }
+                .commnav .main .wrap .logotext a {
+                    float: left;
+                    padding-left: 20px;
+                    text-decoration: none;
+                    color: #666666;
+                    font-size: 22px;
+                    font-weight: bold;
+                }
+                .commnav .main .wrap .logotext img {
+                    float: left;
+                    padding-left: 0px;
+                }
+
+                .commnav .cf:after {
+                    content: ".";
+                    display: block;
+                    height: 0;
+                    clear: both;
+                    visibility: hidden
+                }
+
+                .commnav a {
+                    text-decoration: none;
+                    color: #666666;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+
+                    .commnav a:hover {
+                        color: #249ddd;
+                    }
+
+                #night-mode {
+                    background-color: #000;
+                }
+
+                    #night-mode .commnav {
+                        background-color: #000;
+                    }
+
+                        #night-mode .commnav a {
+                            color: #fff;
+                        }
+
+                            #night-mode .commnav a:hover {
+                                color: #249ddd;
+                            }
+            </style>
+            <div class="commnav">
+                <div class="main">
+                    <div class="wrap cf">
+                        <div class="left cf">
+                            <a class="light-switch mr30" style="right: -50px;"></a>
+                        </div>
+                        <div class="logotext"><img src="images/中科院logo.png" style="width:37px;height:37px"><a href="">中国科学院"百人计划"名单统计及规律挖掘</a></div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="js/jquery.ua.js"></script>
+            <script type="text/javascript">
+                $(".commnav .main .wrap .left .light-switch").click(function () {
+                    if ($(this).hasClass("on")) {
+                        $("body").attr("id", "");
+                        $(this).removeClass("on");
+                    } else {
+                        $("body").attr("id", "night-mode");
+                        $(this).addClass("on");
+                    }
+                });
+            </script>
+            <!-- 公用导航功能/E -->
+
+            <!-- 图表区/S -->
+            <style type="text/css">
+                .top-rated-news .left {
+                    float: left;
+                    width: 470px;
+                    height: 440px;
+                    margin-top: 5px;
+                }
+                .top-rated-news .right {
+                    float: right;
+                    width: 492px;
+                    height: 440px;
+                    margin-top: 5px;
+                }
+            </style>
+
+            <div class="top-rated-news layout cf">
+                <div class="left">
+                    <div class="bh">
+                        <div class="title" role="heading" tabindex="0">
+                            <ul>
+                                <li class="item mr27 current">性别统计</li>
+                            </ul>
+                        </div>
+                        <span class="current-index"></span>
+                    </div>
+                    <div id="sex" style="width:470px;height:393px;top: 5px;"></div>
+                    <script type="text/javascript">
+                        var dom = document.getElementById("sex");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        var data = genData(2);
+
+                        option = {
+                            title : {
+                                text: '',
+                                subtext: '统计结果截至2018.4',
+                                x:'left'
+                            },
+                            tooltip : {
+                                trigger: 'item',
+                                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                            },
+                            toolbox: {
+                                show : true,
+                                feature : {
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            legend: {
+                                type: 'scroll',
+                                orient: 'vertical',
+                                right: 0,
+                                top: 30,
+                                bottom: 20,
+                                data: data.legendData,
+
+                                selected: data.selected
+                            },
+                            series : [
+                                {
+                                    name: '性别',
+                                    type: 'pie',
+                                    radius : '55%',
+                                    center: ['40%', '50%'],
+                                    data: data.seriesData,
+                                    itemStyle: {
+                                        emphasis: {
+                                            shadowBlur: 10,
+                                            shadowOffsetX: 0,
+                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                        }
+                                    }
+                                }
+                            ]
+                        };
+
+
+
+
+                        function genData(count) {
+                            var nameList = ['女','男'];
+                            var legendData = [];
+                            var seriesData = [];
+                            var data = ['89','1130'];
+                            var selected = {};
+                            for (var i = 0; i < count; i++) {
+                                name = nameList[i];
+                                legendData.push(name);
+                                seriesData.push({
+                                    name: name,
+                                    value: data[i]
+                                });
+                                selected[name] = i < 6;
+                            }
+
+                            return {
+                                legendData: legendData,
+                                seriesData: seriesData,
+                                selected: selected
+                            };
+
+                        };
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                    </script>
+                 </div>
+                <div class="right">
+                    <style type="text/css">
+                        .content .bh {
+                            height: 42px !important;
+							position:relative;
+                        }
+
+                            .content .bh .title {
+                                height: 29px !important;
+                                padding: 0 0 11px 0 !important;
+                                border-bottom: 2px solid #00bafd !important;
+                            }
+
+                                .content .bh .title p {
+                                    width: 200px;
+                                    float: left;
+                                }
+
+                                .content .bh .title a {
+                                    display: block;
+                                    float: right;
+                                    width: 50px;
+                                    text-align: right;
+                                    color: #666666;
+                                    font-size: 14px;
+                                    line-height: 40px;
+                                    font-family: 'microsoft yahei';
+                                }
+
+                        .content .bh_15 .title-index {
+                            background: url(http://mat1.gtimg.com/bj2022/v_cxyu/huih_ind/pc/hd_line111.png) 0 bottom no-repeat !important;
+                        }
+                    </style>
+                    <div class=" content">
+                        <div class="bh_15 bh">
+                            <div class="title" role="title" tabindex="0" style="width: 490px;">
+                                <p style="color: #00bafd !important">年龄分布统计</p>
+                            </div>
+                            <div class="title-index"></div>
+                        </div>
+                    </div>
+                    <div id="age_range" style="width:470px;height:393px;top: 5px; "></div>
+                    <script type="text/javascript">
+                        var dom = document.getElementById("age_range");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        var data = genData(4);
+
+                        option = {
+                            title : {
+                                text: '',
+                                subtext: '统计结果截至2018.4',
+                                x:'left'
+                            },
+                            tooltip : {
+                                trigger: 'item',
+                                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                            },
+                            toolbox: {
+                                show : true,
+                                feature : {
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            legend: {
+                                type: 'scroll',
+                                orient: 'vertical',
+                                right: 0,
+                                top: 30,
+                                bottom: 20,
+                                data: data.legendData,
+
+                                selected: data.selected
+                            },
+                            series : [
+                                {
+                                    name: '年龄区段',
+                                    type: 'pie',
+                                    radius : '55%',
+                                    center: ['40%', '50%'],
+                                    data: data.seriesData,
+                                    itemStyle: {
+                                        emphasis: {
+                                            shadowBlur: 10,
+                                            shadowOffsetX: 0,
+                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                        }
+                                    }
+                                }
+                            ]
+                        };
+
+                        function genData(count) {
+                            var nameList = [
+                                '<40','40~50','50~60','>60'
+                            ];
+                            var legendData = [];
+                            var seriesData = [];
+                            var selected = {};
+                            var data = ['52','161','213','33'];
+                            for (var i = 0; i < count; i++) {
+                                name = nameList[i];
+                                legendData.push(name);
+                                seriesData.push({
+                                    name: name,
+                                    value:data[i]
+                                });
+                            }
+
+                            return {
+                                legendData: legendData,
+                                seriesData: seriesData,
+                                selected: selected
+                            };
+                        };
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                    </script>
+                </div>
+                <div class="left">
+                    <div class="bh">
+                        <div class="title" role="heading" tabindex="0" style="width: 1000px">
+                            <ul>
+                                <li class="item mr27 current">出生年份统计</li>
+                            </ul>
+                        </div>
+                        <span class="current-index"></span>
+                    </div>
+                    <div id="years" style="width:1000px;height:395px;top: 5px; "></div>
+                    <script type="text/javascript">
+                        var dom = document.getElementById("years");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        var dataAxis = ['1910','1911','1921','1951','1955','1956','1957','1958','1959',
+                            '1960','1961','1962','1963','1964','1965','1966','1967','1968','1969', '1970',
+                            '1971','1972','1973','1974','1975','1976','1977','1978','1979','1980','1981',
+                            '1982','1983','1984','1985','1989'];
+                        var data = [1, 1, 1, 1, 3, 9, 11, 6, 9, 6, 11, 28, 41, 35, 21, 22, 20, 20, 25, 21,
+                            11, 23,19,14,10,14,11,13,12,10,10,10,4,1,4,1];
+                        var yMax = 0;
+                        var dataShadow = [];
+
+                        for (var i = 0; i < data.length; i++) {
+                            dataShadow.push(yMax);
+                        }
+
+                        option = {
+                            title: {
+                                text: '',
+                                subtext: '统计结果截至2018.4'
+                            },
+                            tooltip : {
+                                trigger: 'item',
+                                formatter: "{b} : {c} (人次)"
+                            },
+                            toolbox: {
+                                show : true,
+                                feature : {
+                                    dataView : {show: true, readOnly: false},
+                                    magicType : {show: true, type: ['line', 'bar']},
+                                    restore : {show: true},
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            xAxis: {
+                                data: dataAxis,
+                                axisLabel: {
+                                    inside: true,
+                                    textStyle: {
+                                        color: 'black'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    show: false
+                                },
+                                z: 10
+                            },
+                            yAxis: {
+                                axisLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    textStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'inside'
+                                }
+                            ],
+                            series: [
+                                { // For shadow
+                                    type: 'bar',
+                                    itemStyle: {
+                                        normal: {color: 'rgba(0,0,0,0.05)'}
+                                    },
+                                    barGap:'-100%',
+                                    barCategoryGap:'40%',
+                                    data: dataShadow,
+                                    animation: true
+                                },
+                                {
+                                    type: 'bar',
+                                    itemStyle: {
+                                        normal: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                    0, 0, 0, 1,
+                                                    [
+                                                        {offset: 0, color: '#83bff6'},
+                                                        {offset: 0.5, color: '#188df0'},
+                                                        {offset: 1, color: '#188df0'}
+                                                    ]
+                                            )
+                                        },
+                                        emphasis: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                    0, 0, 0, 1,
+                                                    [
+                                                        {offset: 0, color: '#2378f7'},
+                                                        {offset: 0.7, color: '#2378f7'},
+                                                        {offset: 1, color: '#83bff6'}
+                                                    ]
+                                            )
+                                        }
+                                    },
+                                    animationDelay: function (idx) {
+                                        return idx * 10;
+                                    },
+                                    data: data
+                                }
+                            ]
+                        };
+
+                        // Enable data zoom when user click bar.
+                        var zoomSize = 6;
+                        myChart.on('click', function (params) {
+                            console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                            myChart.dispatchAction({
+                                type: 'dataZoom',
+                                startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                                endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                            });
+                        });;
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                    </script>
+                </div>
+                <div class="left" style="width: 1000px;height:497px;">
+                    <div class="bh">
+                        <div class="title" role="heading" tabindex="0" style="width: 1000px">
+                            <ul>
+                                <li class="item mr27 current">籍贯热力图</li>
+                            </ul>
+                        </div>
+                        <span class="current-index" ></span>
+                    </div>
+                    <div id="birth" style="width: 1280px;height: 450px;left: -140px;top: 5px;"></div>
+                    <script type="text/javascript">
+                        var map = new BMap.Map("birth");          // 创建地图实例
+                        var point = new BMap.Point(115.018261, 36.521984);
+                        map.centerAndZoom(point, 5);             // 初始化地图，设置中心点坐标和地图级别
+                        map.enableScrollWheelZoom(); // 允许滚轮缩放
+                        map.setMapStyle({style:'midnight'});
+                        var points =[
+                            {"lng":115.304482,"lat":28.365232,"count":80},
+                            {"lng":113.290509,"lat":40.113744,"count":80},
+                            {"lng":115.180078,"lat":28.714689,"count":80},
+                            {"lng":110.4438,"lat":33.684554,"count":80},
+                            {"lng":119.20708,"lat":31.932635,"count":80},
+                            {"lng":117.036261,"lat":31.732638,"count":80},
+                            {"lng":104.626638,"lat":35.586056,"count":80},
+                            {"lng":111.720664,"lat":27.695864,"count":400},
+                            {"lng":113.260593,"lat":39.509316,"count":80},
+                            {"lng":115.893528,"lat":28.689578,"count":80},
+                            {"lng":108.924274,"lat":23.552255,"count":80},
+                            {"lng":107.644227,"lat":35.726801,"count":80},
+                            {"lng":117.216005,"lat":31.859252,"count":560},
+                            {"lng":117.042086,"lat":33.037131,"count":80},
+                            {"lng":120.580144,"lat":32.273616,"count":80},
+                            {"lng":121.579006,"lat":29.885259,"count":240},
+                            {"lng":117.335876,"lat":31.228414,"count":240},
+                            {"lng":112.435504,"lat":26.365629,"count":80},
+                            {"lng":119.173872,"lat":34.601549,"count":80},
+                            {"lng":85.614899,"lat":42.127001,"count":240},
+                            {"lng":103.388452,"lat":30.614941,"count":80},
+                            {"lng":111.310981,"lat":30.732758,"count":80},
+                            {"lng":112.542842,"lat":33.01142,"count":80},
+                            {"lng":113.652481,"lat":26.806729,"count":240},
+                            {"lng":122.093958,"lat":37.528787,"count":80},
+                            {"lng":115.46336,"lat":35.26244,"count":80},
+                            {"lng":116.122985,"lat":34.738238,"count":80},
+                            {"lng":111.026435,"lat":25.936465,"count":80},
+                            {"lng":112.564942,"lat":28.977186,"count":80},
+                            {"lng":118.778074,"lat":32.057236,"count":80},
+                            {"lng":119.981861,"lat":31.771397,"count":80},
+                            {"lng":107.170645,"lat":34.364081,"count":160},
+                            {"lng":121.487899,"lat":31.249162,"count":80},
+                            {"lng":119.455651,"lat":33.225834,"count":80},
+                            {"lng":110.824406,"lat":31.31935,"count":80},
+                            {"lng":110.780909,"lat":19.750947,"count":80},
+                            {"lng":121.591047,"lat":29.142748,"count":80},
+                            {"lng":107.294659,"lat":22.005062,"count":80},
+                            {"lng":102.457625,"lat":38.103267,"count":320},
+                            {"lng":114.415868,"lat":43.468238,"count":160},
+                            {"lng":120.751343,"lat":36.905533,"count":80},
+                            {"lng":120.873801,"lat":32.014665,"count":160},
+                            {"lng":118.527663,"lat":36.09929,"count":480},
+                            {"lng":119.957202,"lat":29.159494,"count":640},
+                            {"lng":111.461525,"lat":27.236811,"count":160},
+                            {"lng":118.103886,"lat":24.489231,"count":80},
+                            {"lng":114.520487,"lat":37.069531,"count":80},
+                            {"lng":121.463624,"lat":29.314474,"count":80},
+                            {"lng":120.389081,"lat":30.172894,"count":80},
+                            {"lng":110.901147,"lat":37.962867,"count":80},
+                            {"lng":120.831486,"lat":31.669446,"count":80},
+                            {"lng":117.984943,"lat":26.050118,"count":240},
+                            {"lng":122.406926,"lat":37.128686,"count":80},
+                            {"lng":114.085491,"lat":32.128582,"count":80},
+                            {"lng":116.621327,"lat":28.682776,"count":80},
+                            {"lng":111.359829,"lat":39.20644,"count":80},
+                            {"lng":118.347445,"lat":35.058878,"count":160},
+                            {"lng":115.140493,"lat":29.828087,"count":80},
+                            {"lng":117.684667,"lat":36.233654,"count":80},
+                            {"lng":113.649644,"lat":34.75661,"count":320},
+                            {"lng":112.447525,"lat":34.657368,"count":80},
+                            {"lng":116.395645,"lat":39.929986,"count":240},
+                            {"lng":115.625834,"lat":30.015614,"count":80},
+                            {"lng":112.550864,"lat":37.890277,"count":80},
+                            {"lng":109.878905,"lat":22.066766,"count":80},
+                            {"lng":120.380818,"lat":29.237427,"count":80},
+                            {"lng":118.37604,"lat":30.599287,"count":80},
+                            {"lng":115.676082,"lat":27.757258,"count":80},
+                            {"lng":128.463943,"lat":45.48952,"count":80},
+                            {"lng":119.455835,"lat":32.204409,"count":80},
+                            {"lng":112.998527,"lat":32.982431,"count":80},
+                            {"lng":120.760428,"lat":30.773992,"count":80},
+                            {"lng":113.96359,"lat":32.711951,"count":80},
+                            {"lng":117.282699,"lat":31.866942,"count":80},
+                            {"lng":118.935664,"lat":33.664059,"count":80},
+                            {"lng":109.518882,"lat":28.013633,"count":80},
+                            {"lng":119.790265,"lat":31.362245,"count":160},
+                            {"lng":122.753592,"lat":41.6216,"count":160},
+                            {"lng":116.688092,"lat":30.242568,"count":80},
+                            {"lng":103.823305,"lat":36.064226,"count":80},
+                            {"lng":117.089415,"lat":36.188078,"count":80},
+                            {"lng":119.382839,"lat":31.425242,"count":240},
+                            {"lng":102.89916,"lat":30.367481,"count":560},
+                            {"lng":120.627279,"lat":31.907812,"count":160},
+                            {"lng":118.470187,"lat":36.680584,"count":80},
+                            {"lng":115.648756,"lat":33.337748,"count":80},
+                            {"lng":120.276899,"lat":32.039443,"count":80},
+                            {"lng":106.662473,"lat":35.972546,"count":160},
+                            {"lng":114.351642,"lat":34.801854,"count":80},
+                            {"lng":128.047414,"lat":47.356592,"count":240},
+                            {"lng":114.409239,"lat":33.301221,"count":80},
+                            {"lng":113.487831,"lat":27.172268,"count":80},
+                            {"lng":119.368489,"lat":33.013797,"count":160},
+                            {"lng":126.657717,"lat":45.773225,"count":80},
+                            {"lng":114.3162,"lat":30.581084,"count":320},
+                            {"lng":120.473927,"lat":32.553985,"count":80},
+                            {"lng":116.342048,"lat":29.356215,"count":80},
+                            {"lng":125.313642,"lat":43.898338,"count":160},
+                            {"lng":120.137243,"lat":30.877925,"count":160},
+                            {"lng":118.482898,"lat":30.321833,"count":80},
+                            {"lng":105.69335,"lat":25.421634,"count":80},
+                            {"lng":112.515496,"lat":37.866566,"count":80},
+                            {"lng":120.108684,"lat":28.940177,"count":80},
+                            {"lng":107.045478,"lat":33.081569,"count":80},
+                            {"lng":108.953098,"lat":34.2778,"count":160},
+                            {"lng":126.564544,"lat":43.871988,"count":160},
+                            {"lng":114.709797,"lat":25.857652,"count":160},
+                            {"lng":121.338408,"lat":30.189257,"count":80},
+                            {"lng":112.265493,"lat":37.14809,"count":80},
+                            {"lng":114.615246,"lat":29.55767,"count":80},
+                            {"lng":111.248833,"lat":24.513865,"count":80},
+                            {"lng":106.530635,"lat":29.544606,"count":320},
+                            {"lng":111.614648,"lat":26.435972,"count":80},
+                            {"lng":111.179572,"lat":41.116204,"count":80},
+                            {"lng":105.042581,"lat":31.118872,"count":80},
+                            {"lng":121.593478,"lat":38.94871,"count":160},
+                            {"lng":114.400039,"lat":27.81113,"count":80},
+                            {"lng":113.055296,"lat":34.95026,"count":80},
+                            {"lng":110.599739,"lat":27.103196,"count":80},
+                            {"lng":119.427778,"lat":32.408505,"count":80},
+                            {"lng":114.902018,"lat":33.709947,"count":80},
+                            {"lng":106.969741,"lat":32.812036,"count":80},
+                            {"lng":106.734996,"lat":26.902826,"count":80},
+                            {"lng":117.058739,"lat":30.537898,"count":160},
+                            {"lng":113.538915,"lat":29.996772,"count":80},
+                            {"lng":115.941883,"lat":29.998876,"count":160},
+                            {"lng":113.468522,"lat":25.937184,"count":80},
+                            {"lng":109.565069,"lat":29.886112,"count":80},
+                            {"lng":112.935556,"lat":27.835095,"count":80},
+                            {"lng":118.059134,"lat":36.804685,"count":320},
+                            {"lng":117.676205,"lat":24.517065,"count":80},
+                            {"lng":120.400517,"lat":37.344146,"count":80},
+                            {"lng":112.648514,"lat":26.759845,"count":80},
+                            {"lng":114.731825,"lat":24.772706,"count":80},
+                            {"lng":112.583819,"lat":26.898164,"count":80},
+                            {"lng":120.219375,"lat":30.259244,"count":80},
+                            {"lng":115.528441,"lat":36.858027,"count":80},
+                            {"lng":117.014413,"lat":28.703236,"count":80},
+                            {"lng":119.943432,"lat":31.672903,"count":80},
+                            {"lng":116.863806,"lat":38.297615,"count":80},
+                            {"lng":112.410562,"lat":31.209316,"count":480},
+                            {"lng":114.443563,"lat":32.03123,"count":80},
+                            {"lng":113.861084,"lat":36.016561,"count":80},
+                            {"lng":103.999118,"lat":28.702429,"count":80},
+                            {"lng":117.279305,"lat":34.807883,"count":80},
+                            {"lng":109.280549,"lat":33.6954,"count":80},
+                            {"lng":116.330775,"lat":33.972013,"count":80},
+                            {"lng":116.552816,"lat":30.758639,"count":160},
+                            {"lng":103.725021,"lat":27.340633,"count":80}
+                        ];
+
+                        if(!isSupportCanvas()){
+                            alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+                        }
+                        //详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+                        //参数说明如下:
+                        /* visible 热力图是否显示,默认为true
+                         * opacity 热力的透明度,1-100
+                         * radius 势力图的每个点的半径大小
+                         * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+                         *	{
+                         .2:'rgb(0, 255, 255)',
+                         .5:'rgb(0, 110, 255)',
+                         .8:'rgb(100, 0, 255)'
+                         }
+                         其中 key 表示插值的位置, 0~1.
+                         value 为颜色值.
+                         */
+                        heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20});
+                        map.addOverlay(heatmapOverlay);
+                        heatmapOverlay.setDataSet({data:points,max:100});
+                        heatmapOverlay.show();
+
+
+                        function setGradient(){
+                            /*格式如下所示:
+                             {
+                             0:'rgb(102, 255, 0)',
+                             .5:'rgb(255, 170, 0)',
+                             1:'rgb(255, 0, 0)'
+                             }*/
+                            var gradient = {};
+                            var colors = document.querySelectorAll("input[type='color']");
+                            colors = [].slice.call(colors,0);
+                            colors.forEach(function(ele){
+                                gradient[ele.getAttribute("data-key")] = ele.value;
+                            });
+                            heatmapOverlay.setOptions({"gradient":gradient});
+                        }
+                        //判断浏览区是否支持canvas
+                        function isSupportCanvas(){
+                            var elem = document.createElement('canvas');
+                            return !!(elem.getContext && elem.getContext('2d'));
+                        }
+                    </script>
+                    <style type="text/css">
+                        /*去除百度地图版权*/
+                        #birth .anchorBL{
+                            display:none;
+                        }
+                    </style>
+                </div>
+                <div class="left" style="width: 1000px;top: 5px;">
+                    <div class="bh">
+                        <div class="title" role="heading" tabindex="0" style="width: 1000px">
+                            <ul>
+                                <li class="item mr27 current">研究所分布</li>
+                            </ul>
+                        </div>
+                        <span class="current-index" ></span>
+                    </div>
+                    <div id="office" style="width:1000px;height: 440px;top: 5px;"></div>
+                    <script type="text/javascript" >
+                        var dom = document.getElementById("office");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+                        option = null;
+                        option = {
+                            title : {
+                                text: '',
+                                subtext: '截取“百人计划”人才数量前30位的研究所进行展示'
+                            },
+                            tooltip : {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data:['降水量']
+                            },
+                            toolbox: {
+                                show : true,
+                                feature : {
+                                    dataView : {show: true, readOnly: false},
+                                    magicType : {show: true, type: ['line', 'bar']},
+                                    restore : {show: true},
+                                    saveAsImage : {show: true}
+                                }
+                            },
+                            calculable : true,
+                            xAxis : [
+                                {
+                                    type : 'category',
+                                    data : ['物理研究所','寒区旱区环境与工程研究所',
+                                        '过程工程研究所','数学与系统科学研究院',
+                                        '上海药物研究所','生态环境研究中心',
+                                        '南海海洋研究所','昆明植物研究所',
+                                        '生物化学与细胞生物学研究所','青岛生物能源与过程研究所',
+                                        '昆明动物研究所','理论物理研究所',
+                                        '上海应用物理研究所','武汉物理与数学研究所',
+                                        '上海巴斯德研究所','金属研究所',
+                                        '水生生物研究所','东北地理与农业生态研究所',
+                                        '天津工业生物技术研究所','紫金山天文台',
+                                        '植物生理生态研究所','广州生物医药与健康研究院',
+                                        '上海硅酸盐研究所','新疆生态与地理研究所',
+                                        '声学研究所','上海天文台',
+                                        '上海微系统与信息技术研究所','近代物理研究所',
+                                        '武汉病毒研究所','华南植物园'
+                                    ]
+                                }
+                            ],
+                            yAxis : [
+                                {
+                                    type : 'value'
+                                }
+                            ],
+                            series : [
+                                {
+                                    name:'“百人计划”人才数量',
+                                    type:'bar',
+                                    data:[82, 37, 36, 32, 31, 29, 24, 23, 23, 22,
+                                        21, 20, 19, 19, 18, 18, 18, 18, 18, 17,
+                                        17, 16, 16, 15, 15, 15, 14, 14, 13, 13],
+                                    markPoint : {
+                                        data : [
+                                            {type : 'max', name: '最大值'},
+                                            {type : 'min', name: '最小值'}
+                                        ]
+                                    },
+                                    itemStyle : {
+                                        normal:{
+                                            color:"#05568b",
+                                        }
+                                    },
+                                    barWidth:17,
+                                    markLine : {
+                                        data : [
+                                            {type : 'average', name : '平均值'}
+                                        ]
+                                    }
+                                }
+                            ]
+                        };
+                        ;
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        };
+                        if (option && typeof option === "object") {
+                            myChart.setOption(option, true);
+                        }
+                    </script>
+                </div>
+            </div>
+            <!-- 图表/E -->
+            
+        </div>
+    </div>
+
+
+    <!-- 版权信息/S -->
+    <div class="copyright">
+        <div class="content layout">
+            <div class="copyright-info" tabindex="0" style="text-align:center;">
+                <p>版权&#169;北京航空航天大学</p>
+            </div>
+        </div>
+    </div>
+    <style type="text/css">
+        .copyright {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            background: url(images/footer.jpg);
+            max-width: 2700px;
+            overflow: hidden;
+            margin: -50px auto 0;
+        }
+
+            .copyright .content {
+                position: relative;
+                height: 30px;
+                padding-top: 10px;
+            }
+
+                .copyright .content .copyright-info p {
+                    color: #2b73b4;
+                    font-size: 14px;
+                    line-height: 26px;
+                }
+
+        #night-mode .copyright {
+            background: #000;
+            border-top: 1px solid #fff;
+        }
+    </style>
+    <!-- 版权信息/S -->
+    </body>
+</html>
